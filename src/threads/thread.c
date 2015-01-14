@@ -133,7 +133,8 @@ thread_tick (void)
 #endif
   else
     kernel_ticks++;
-
+  /* exercise a */
+   t->thread_tick_count++;
   /* Enforce preemption. */
   if (++thread_ticks >= TIME_SLICE)
     intr_yield_on_return ();
@@ -469,6 +470,8 @@ init_thread (struct thread *t, const char *name, int priority)
   t->stack = (uint8_t *) t + PGSIZE;
   t->priority = priority;
   t->magic = THREAD_MAGIC;
+  /* exercise a*/
+    t->thread_tick_count=0;
   list_push_back (&all_list, &t->allelem);
 }
 
@@ -580,6 +583,25 @@ allocate_tid (void)
   lock_release (&tid_lock);
 
   return tid;
+}
+
+/* exercise b */
+void
+thread_function (void* aux)
+{
+	 struct thread *current_thread = running_thread ();
+	 if(current_thread->thread_tick_count<25) {
+		 printf ("Thread: id = %d, name = %s , thread_tick_count = %d, priority = %d\n",
+		          current_thread->tid, current_thread->name, current_thread->thread_tick_count, current_thread->priority);
+	 }
+}
+void allocate_page(int size)
+{
+	palloc_get_multiple (PAL_USER, size);
+}
+void free_page(void *buffer)
+{
+
 }
 
 /* Offset of `stack' member within `struct thread'.

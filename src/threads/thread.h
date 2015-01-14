@@ -93,6 +93,9 @@ struct thread
     /* Shared between thread.c and synch.c. */
     struct list_elem elem;              /* List element. */
 
+    /* exercise a */
+    int thread_tick_count;
+    struct list user_allocs;
 #ifdef USERPROG
     /* Owned by userprog/process.c. */
     uint32_t *pagedir;                  /* Page directory. */
@@ -101,6 +104,13 @@ struct thread
     /* Owned by thread.c. */
     unsigned magic;                     /* Detects stack overflow. */
   };
+
+struct allocs
+{
+	void* alloc_mem;
+	size_t nr_of_pages;
+	struct list_elem elem;
+};
 
 /* If false (default), use round-robin scheduler.
    If true, use multi-level feedback queue scheduler.
@@ -137,5 +147,9 @@ int thread_get_nice (void);
 void thread_set_nice (int);
 int thread_get_recent_cpu (void);
 int thread_get_load_avg (void);
+void thread_function (void* aux);
+
+void allocate_page(int size);
+void free_page(void *buffer);
 
 #endif /* threads/thread.h */

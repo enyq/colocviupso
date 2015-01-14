@@ -182,3 +182,21 @@ inumber (int fd)
 {
   return syscall1 (SYS_INUMBER, fd);
 }
+int
+create_simple_thread(const char *name, int priority)
+{
+	return syscall2 (SYS_CRSPTH, name, priority);
+}
+
+void*
+user_alloc(int size)
+{
+	return syscall1 (SYS_USRALLOC, size);
+}
+
+void
+user_free(void *buffer)
+{
+	syscall1 (SYS_USRFREE, buffer);
+}
+
